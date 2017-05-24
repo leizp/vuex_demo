@@ -1,8 +1,14 @@
 <template>
   <div id="app" style="height:100%;">
    <view-box ref="viewBox">
-    <x-header :left-options="{showBack: true,backText:'返回',showMore: true}"  :right-options="{showMore: true}" @on-click-more="show1 = true" v-model="show1">首页</x-header>
-    <transition name="bounce">
+    <!-- 头部组件 -->
+    <transition v-on:before-enter="beforeEnter" v-on:leave="leave">
+      <x-header :left-options="{showBack: true,backText:'返回',showMore: true}"  :right-options="{showMore: true}" @on-click-more="showActionsheet = true" v-model="showActionsheet" :title="title"></x-header>
+    </transition>
+    <!-- 内容组件 -->
+    <transition 
+      v-on:before-enter="beforeEnter"
+      v-on:leave="leave">
       <router-view></router-view>
     </transition>
     <!-- 底部选项卡切换 -->
@@ -24,7 +30,7 @@
       </tabbar-item>
     </tabbar>
     <!-- 底部弹出页面 -->
-    <actionsheet v-model="show1" :menus="menus1" :close-on-clicking-mask="false" show-cancel></actionsheet>
+    <actionsheet v-model="showActionsheet" :menus="menus1" :close-on-clicking-mask="false" show-cancel></actionsheet>
    </view-box>
   </div>
 </template>
@@ -35,11 +41,23 @@ export default {
   name: 'app',
   data () {
     return {
-      show1: false,
+      showActionsheet: false,
+      bounce: {},
+      curIndex: 0,
       menus1: {
         menu1: '分享给朋友',
         menu2: '分享到朋友圈'
       }
+    }
+  },
+  created () {
+    console.log(this)
+  },
+  computed: {
+    title () {
+      if (this.$route.path === '/') return '首页'
+      if (this.$route.path === '/home') return 'Home'
+      if (this.$route.path === '/other') return 'other'
     }
   },
   components: {
@@ -51,77 +69,97 @@ export default {
   },
   methods: {
     changeShow: function (index) {
-      console.log(index)
+      this.curIndex = index
+      // console.log(index)
+    },
+    // 过渡进入
+    // 设置过渡进入之前的组件状态
+    beforeEnter: function (el, done) {
+      // 判断当前动画该如何执行
+      var className = el.attributes.class.value
+      // console.log(this.curIndex) // 获取当前tapbar的index
+      // console.log(el.attributes.class.value) // 获取当前进入元素的class name
+      if (className === 'home' && this.curIndex !== 2) {
+        el.style.animationName = 'fadeInRight'
+        el.style.animationDuration = '0.5s'
+      } else if (className === 'other') {
+        el.style.animationName = 'fadeInRight'
+        el.style.animationDuration = '0.5s'
+      } else {
+        el.style.animationName = 'fadeInLeft'
+        el.style.animationDuration = '0.5s'
+      }
+    },
+    // 设置过渡离开完成时地组件状态
+    leave: function (el, done) {
+      // ...
+      var className = el.attributes.class.value
+      if (className === 'home') {
+        el.style.animationName = 'fadeInRightL'
+        el.style.animationDuration = '0.5s'
+      } else if (className === 'other') {
+        el.style.animationName = 'fadeInRightL'
+        el.style.animationDuration = '0.5s'
+      } else {
+        el.style.animationName = 'fadeInLeftR'
+        el.style.animationDuration = '0.5s'
+      }
+      done()
     }
   }
 }
 </script>
 
 <style lang="less">
-@import '~vux/src/styles/reset.less';
+  @import '~vux/src/styles/reset.less';
 
-body {
-  background-color: #fbf9fe;
-}
-.bounce-enter-active {
-  animation: slideInLeft 1s;
-}
- .bounce-leave-active {
-  animation: slideOutRight 1s;
-} 
-@keyframes slideOutLeft {
-  from {
-    transform: translate3d(0, 0, 0);
+  body {
+    background-color: #fbf9fe;
+  }
+  .bounce-enter-active {
+    animation: fadeInRight 0.5s;
+  }
+   .bounce-leave-active {
+    animation: fadeInRightL 0.5s;
+  }
+  //右边进入界面动画
+  /* fadeInRight Anmiate start */
+  @keyframes fadeInRight {
+    from {
+      transform: translate3d(100%, 0, 0);
+    }
+    to {
+      transform: none;
+    }
+  }
+  @keyframes fadeInRightL {
+    from {
+      transform: none;
+    }
+    to {
+      transform: translate3d(-100%, 0, 0);
+    }
   }
 
-  to {
-    visibility: hidden;
-    transform: translate3d(-100%, 0, 0);
-  }
-}
+  /* fadeInRight Anmiate end */
+  /* 左边进入动画 */
+  /* fadeInLeft Anmiate Start */
 
-.slideOutLeft {
-  animation-name: slideOutLeft;
-}
-
-@keyframes slideOutRight {
-  from {
-    transform: translate3d(0, 0, 0);
+  @keyframes fadeInLeft {
+    from {
+      transform: translate3d(-100%, 0, 0);
+    }
+    to {
+      transform: none;
+    }
   }
 
-  to {
-    visibility: hidden;
-    transform: translate3d(100%, 0, 0);
+  @keyframes fadeInLeftR {
+    from {
+      transform: none;
+    }
+    to {
+      transform: translate3d(100%, 0, 0);
+    }
   }
-}
-
-@keyframes slideInLeft {
-  from {
-    transform: translate3d(-100%, 0, 0);
-    visibility: visible;
-  }
-
-  to {
-    transform: translate3d(0, 0, 0);
-  }
-}
-
-.slideInLeft {
-  animation-name: slideInLeft;
-}
-
-@keyframes slideInRight {
-  from {
-    transform: translate3d(100%, 0, 0);
-    visibility: visible;
-  }
-
-  to {
-    transform: translate3d(0, 0, 0);
-  }
-}
-
-.slideInRight {
-  animation-name: slideInRight;
-}
 </style>
