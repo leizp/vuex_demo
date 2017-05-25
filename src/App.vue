@@ -16,17 +16,17 @@
       <tabbar-item show-dot selected @on-item-click="changeShow(0)" link='/'>
         <img slot="icon" src="./assets/images/message0.png">
         <img slot="icon-active" src="./assets/images/message1.png">
-        <span slot="label">消息</span>
+        <span slot="label">首页</span>
       </tabbar-item>
       <tabbar-item @on-item-click="changeShow(1)" link='/home'>
         <img slot="icon" src="./assets/images/person0.png">
         <img slot="icon-active" src="./assets/images/person1.png">
-        <span slot="label">联系人</span>
+        <span slot="label">Demo</span>
       </tabbar-item>
       <tabbar-item badge="2" @on-item-click="changeShow(2)" link='/other'>
         <img slot="icon" src="./assets/images/link0.png">
         <img slot="icon-active" src="./assets/images/link1.png">
-        <span slot="label">动态</span>
+        <span slot="label">New</span>
       </tabbar-item>
     </tabbar>
     <!-- 底部弹出页面 -->
@@ -51,13 +51,13 @@ export default {
     }
   },
   created () {
-    console.log(this)
   },
   computed: {
+    // 改变头部标题
     title () {
       if (this.$route.path === '/') return '首页'
-      if (this.$route.path === '/home') return 'Home'
-      if (this.$route.path === '/other') return 'other'
+      if (this.$route.path === '/home') return 'Demo页面'
+      if (this.$route.path === '/other') return '其他页面'
     }
   },
   components: {
@@ -112,7 +112,6 @@ export default {
 
 <style lang="less">
   @import '~vux/src/styles/reset.less';
-
   body {
     background-color: #fbf9fe;
   }

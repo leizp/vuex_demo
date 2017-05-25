@@ -6,10 +6,29 @@ import VueRouter from 'vue-router'
 import App from './App'
 import index from './views/index'
 import { AjaxPlugin } from 'vux'
-import store from 'vuex'
+import Vuex from 'vuex'
+import vuexI18n from 'vuex-i18n'
+import './fontAwesome/css/font-awesome.min.css'
 
 Vue.use(VueRouter)
 Vue.use(AjaxPlugin)
+Vue.use(Vuex)
+
+/**
+ * 在模块中添加i18n
+ */
+let store = new Vuex.Store({
+  modules: {
+    i18n: vuexI18n.store
+  }
+})
+
+store.registerModule('vux', {
+  state: {
+  },
+  mutations: {
+  }
+})
 
 const routes = [{
   path: '/',
@@ -23,7 +42,6 @@ const routes = [{
   name: 'other',
   component: resolve => require(['@/views/other.vue'], resolve)
 }]
-
 const router = new VueRouter({
   routes
 })
@@ -42,6 +60,6 @@ Vue.config.productionTip = false
 /* eslint-disable no-new */
 new Vue({
   router,
-  store,
+  Vuex,
   render: h => h(App)
 }).$mount('#app-box')

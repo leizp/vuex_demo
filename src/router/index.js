@@ -10,6 +10,11 @@ export default new Router({
       path: '/',
       name: 'home',
       component: index
-    }
+    }, {
+      path: '/actionsheet',
+      name: 'ActionSheet',
+      component: resolve => require(['@/components/actionsheet/detailList.vue'], resolve)
+    },
+    {path: '/', redirect: '/index'}
   ]
 })
