@@ -30,6 +30,7 @@ store.registerModule('vux', {
   }
 })
 
+// 页面路由配置
 const routes = [{
   path: '/',
   component: index
@@ -41,7 +42,12 @@ const routes = [{
   path: '/other',
   name: 'other',
   component: resolve => require(['@/views/other.vue'], resolve)
+}, {
+  path: '/actionsheet',
+  name: 'other',
+  component: resolve => require(['@/components/actionsheet/index.vue'], resolve)
 }]
+
 const router = new VueRouter({
   routes
 })

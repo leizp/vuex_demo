@@ -19,7 +19,6 @@ export default {
   name: 'home',
   created () {
     // this.getListData()
-    console.log(demoListJson)
   },
   data () {
     return {
